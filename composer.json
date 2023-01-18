@@ -97,14 +97,13 @@
     "install-dev": [
       "cp backup/install/.env .env",
       "cp backup/install/.htaccess web/.htaccess",
-      "npm install",
       "composer install",
       "composer wp-sync-prod-to-local",
       "composer wp-lang-update"
     ],
     "wp-sync-prod-to-local": [
         "wp db reset --yes --allow-root",
-        "wp @production search-replace 'https://kwiatkowski.co' 'http://kwiatkowski.local' --all-tables --export --allow-root | wp db import - --allow-root",
+        "wp @production search-replace 'https://todo.kwiatkowski.co' 'http://todo.local' --all-tables --export --allow-root | wp db import - --allow-root",
         "rsync -avz -e 'ssh -p 222' sggrdhccim@s7.cyber-folks.pl:domains/kwiatkowski.co/public_html/kwiatkowski/web/app/uploads/ web/app/uploads/"
     ],
     "wp-lang-update": [
