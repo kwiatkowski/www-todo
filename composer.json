@@ -1,46 +1,69 @@
 {
   "name": "roots/bedrock",
   "type": "project",
-  "license": "MIT",
-  "description": "WordPress boilerplate with Composer, easier configuration, and an improved folder structure",
-  "homepage": "https://roots.io/bedrock/",
-  "authors": [
-    {
-      "name": "Scott Walkinshaw",
-      "email": "scott.walkinshaw@gmail.com",
-      "homepage": "https://github.com/swalkinshaw"
-    },
-    {
-      "name": "Ben Word",
-      "email": "ben@benword.com",
-      "homepage": "https://github.com/retlehs"
-    }
-  ],
-  "keywords": [
-    "bedrock", "composer", "roots", "wordpress", "wp", "wp-config"
-  ],
-  "support": {
-    "issues": "https://github.com/roots/bedrock/issues",
-    "forum": "https://discourse.roots.io/category/bedrock"
-  },
   "repositories": [
     {
       "type": "composer",
       "url": "https://wpackagist.org",
       "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
+    },
+    {
+      "type": "package",
+      "package": {
+          "name": "advanced-custom-fields/advanced-custom-fields-pro",
+          "version": "6.0.0",
+          "type": "wordpress-muplugin",
+          "dist": {
+              "type": "zip",
+              "url": "https://connect.advancedcustomfields.com/index.php?p=pro&a=download&k=b3JkZXJfaWQ9NDk2MjF8dHlwZT1kZXZlbG9wZXJ8ZGF0ZT0yMDE1LTAyLTEwIDA5OjU1OjA2"
+          }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+          "name": "sass/bootstrap",
+          "version": "5.2.0",
+          "source": {
+              "url": "https://github.com/twbs/bootstrap",
+              "type": "git",
+              "reference": "main"
+          }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+          "name": "sass/sass-core",
+          "version": "1.3",
+          "source": {
+              "url": "https://bitbucket.org/kwiatkowski/sass-core/src",
+              "type": "git",
+              "reference": "master"
+          }
+      }
     }
   ],
   "require": {
     "php": ">=7.4",
     "composer/installers": "^2.2",
-    "vlucas/phpdotenv": "^5.5",
+    "vlucas/phpdotenv": "^5.4",
     "oscarotero/env": "^2.1",
     "roots/bedrock-autoloader": "^1.0",
     "roots/bedrock-disallow-indexing": "^2.0",
-    "roots/wordpress": "6.1.1",
+    "roots/wordpress": "^6",
     "roots/wp-config": "1.0.0",
     "roots/wp-password-bcrypt": "1.1.0",
-    "wpackagist-theme/twentytwentythree": "^1.0"
+    "sass/bootstrap": "^5",
+    "sass/sass-core": "^1",
+    "advanced-custom-fields/advanced-custom-fields-pro": "^6",
+    "wpackagist-plugin/classic-editor": "^1",
+    "wpackagist-plugin/rename-wp-login": "^2",
+    "wpackagist-plugin/simple-history": "^3",
+    "wpackagist-plugin/akismet": "^4",
+    "wpackagist-plugin/disable-emojis": "^1",
+    "wpackagist-plugin/intuitive-custom-post-order": "^3",
+    "wpackagist-plugin/categories-metabox-enhanced": "^0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.7.1",
@@ -58,18 +81,37 @@
   "prefer-stable": true,
   "extra": {
     "installer-paths": {
-      "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+      "web/app/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin",
+        "wpackagist-plugin/classic-editor",
+        "wpackagist-plugin/rename-wp-login",
+        "wpackagist-plugin/akismet",
+        "wpackagist-plugin/disable-emojis"
+    ],
       "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
       "web/app/themes/{$name}/": ["type:wordpress-theme"]
     },
     "wordpress-install-dir": "web/wp"
   },
   "scripts": {
-    "post-root-package-install": [
-      "php -r \"copy('.env.example', '.env');\""
+    "install-dev": [
+      "cp backup/install/.env .env",
+      "cp backup/install/.htaccess web/.htaccess",
+      "npm install",
+      "composer install",
+      "composer wp-sync-prod-to-local",
+      "composer wp-lang-update"
     ],
-    "test": [
-      "phpcs"
+    "wp-sync-prod-to-local": [
+        "wp db reset --yes --allow-root",
+        "wp @production search-replace 'https://kwiatkowski.co' 'http://kwiatkowski.local' --all-tables --export --allow-root | wp db import - --allow-root",
+        "rsync -avz -e 'ssh -p 222' sggrdhccim@s7.cyber-folks.pl:domains/kwiatkowski.co/public_html/kwiatkowski/web/app/uploads/ web/app/uploads/"
+    ],
+    "wp-lang-update": [
+        "wp language core update --allow-root",
+        "wp language plugin --all update --allow-root",
+        "wp language theme --all update --allow-root",
+        "wp core update-db --allow-root"
     ]
   }
 }
