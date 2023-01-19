@@ -104,7 +104,7 @@
     "wp-sync-prod-to-local": [
         "wp db reset --yes --allow-root",
         "wp @production search-replace 'https://todo.kwiatkowski.co' 'http://todo.local' --all-tables --export --allow-root | wp db import - --allow-root",
-        "rsync -avz -e 'ssh -p 222' sggrdhccim@s7.cyber-folks.pl:domains/kwiatkowski.co/public_html/kwiatkowski/web/app/uploads/ web/app/uploads/"
+        "rsync -avz -e 'ssh -p 222' sggrdhccim@s7.cyber-folks.pl:domains/kwiatkowski.co/public_html/todo/web/app/uploads/ web/app/uploads/"
     ],
     "wp-lang-update": [
         "wp language core update --allow-root",

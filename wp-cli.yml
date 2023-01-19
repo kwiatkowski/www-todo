@@ -1,1 +1,8 @@
+
 path: web/wp/
+
+@local:
+  path: web/wp/
+
+@production:
+  ssh: sggrdhccim@s7.cyber-folks.pl:222/home/sggrdhccim/domains/kwiatkowski.co/public_html/todo
