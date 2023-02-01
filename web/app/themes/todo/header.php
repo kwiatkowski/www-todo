@@ -28,27 +28,9 @@
         <meta name="theme-color" content="#ffffff">
 
         <?php wp_head(); ?>
-
-        <?php if ( WP_ENV == 'production'): ?>
-            <!-- Google tag (gtag.js) -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-13113021-2"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-
-                gtag('config', 'UA-13113021-2');
-            </script>
-        <?php endif; ?>
     </head>
 
     <body id="body">
-        <?php
-            if ( WP_ENV == 'development'):
-                echo '<a class="dev__btn" href="#" data-dev-toggle>x</a>';
-            endif;
-        ?>
-
         <header class="header" data-sticky-header>
             <div class="container">
                 <div class="row row--sch">
